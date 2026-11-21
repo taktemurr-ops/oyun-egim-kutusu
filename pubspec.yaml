@@ -1,0 +1,20 @@
+name: oyun_egim_kutusu
+description: "Eğim Kutusu – kutuyu eğ, aynı renkleri buluştur. Blok Oyunları merkez uygulamasının oyunu."
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  studio_core:
+    git:
+      url: https://github.com/taktemurr-ops/studio-core
+      ref: dd4608c1dc7ce8ec0fb68c5a8878184d5d5e081f
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
