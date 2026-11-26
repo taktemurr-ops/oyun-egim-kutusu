@@ -6,9 +6,12 @@ import 'package:studio_core/app/game_api.dart';
 import 'package:studio_core/app/services/audio.dart';
 import 'package:studio_core/core/game_rules.dart';
 import 'package:studio_core/core/strings.dart';
+import 'package:studio_core/app/studio_ui.dart';
 
 import 'tilt_engine.dart';
 import 'tilt_rules.dart';
+
+final Map<StudioLook, ThemeData> _studioThemes = {};
 
 class TiltView extends StatefulWidget {
   final PlayContext ctx;
@@ -110,8 +113,15 @@ class _TiltViewState extends State<TiltView> {
         style: _hint == d ? IconButton.styleFrom(backgroundColor: Colors.amber) : null,
       );
 
+  /// Oyun içi düğmeler, çipler ve yazılar onaylı koyu tasarımda (merkezin
+  /// paleti); tahta çizimi kendi renklerini korur.
   @override
   Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: Builder(builder: _build));
+  }
+
+  Widget _build(BuildContext context) {
     return LayoutBuilder(builder: (context, cons) {
       _cell = math.max(20.0, math.min((cons.maxWidth - 32) / level.w, cons.maxHeight * 0.6 / level.h));
       final left = level.moveLimit > 0 ? level.moveLimit - game.moves : null;
