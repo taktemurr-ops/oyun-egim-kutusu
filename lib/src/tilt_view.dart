@@ -13,15 +13,29 @@ import 'tilt_rules.dart';
 
 final Map<StudioLook, ThemeData> _studioThemes = {};
 
-class TiltView extends StatefulWidget {
+/// Oyun ekranı: düğmeler, çipler, üst bilgi ve pencereler onaylı koyu
+/// tasarımda (merkezin paleti, studio-core StudioLook); tahta çizimi kendi
+/// renklerini korur.
+class TiltView extends StatelessWidget {
   final PlayContext ctx;
   const TiltView({super.key, required this.ctx});
 
   @override
-  State<TiltView> createState() => _TiltViewState();
+  Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: TiltViewBody(ctx: ctx));
+  }
 }
 
-class _TiltViewState extends State<TiltView> {
+class TiltViewBody extends StatefulWidget {
+  final PlayContext ctx;
+  const TiltViewBody({super.key, required this.ctx});
+
+  @override
+  State<TiltViewBody> createState() => _TiltViewState();
+}
+
+class _TiltViewState extends State<TiltViewBody> {
   late TiltLevel level;
   late TiltGame game;
   int? _hint;
@@ -113,15 +127,8 @@ class _TiltViewState extends State<TiltView> {
         style: _hint == d ? IconButton.styleFrom(backgroundColor: Colors.amber) : null,
       );
 
-  /// Oyun içi düğmeler, çipler ve yazılar onaylı koyu tasarımda (merkezin
-  /// paleti); tahta çizimi kendi renklerini korur.
   @override
   Widget build(BuildContext context) {
-    final look = StudioLook.of(context);
-    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: Builder(builder: _build));
-  }
-
-  Widget _build(BuildContext context) {
     return LayoutBuilder(builder: (context, cons) {
       _cell = math.max(20.0, math.min((cons.maxWidth - 32) / level.w, cons.maxHeight * 0.6 / level.h));
       final left = level.moveLimit > 0 ? level.moveLimit - game.moves : null;
