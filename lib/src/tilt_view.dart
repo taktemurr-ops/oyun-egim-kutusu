@@ -6,19 +6,36 @@ import 'package:studio_core/app/game_api.dart';
 import 'package:studio_core/app/services/audio.dart';
 import 'package:studio_core/core/game_rules.dart';
 import 'package:studio_core/core/strings.dart';
+import 'package:studio_core/app/studio_ui.dart';
 
 import 'tilt_engine.dart';
 import 'tilt_rules.dart';
 
-class TiltView extends StatefulWidget {
+final Map<StudioLook, ThemeData> _studioThemes = {};
+
+/// Oyun ekranı: düğmeler, çipler, üst bilgi ve pencereler onaylı koyu
+/// tasarımda (merkezin paleti, studio-core StudioLook); tahta çizimi kendi
+/// renklerini korur.
+class TiltView extends StatelessWidget {
   final PlayContext ctx;
   const TiltView({super.key, required this.ctx});
 
   @override
-  State<TiltView> createState() => _TiltViewState();
+  Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: TiltViewBody(ctx: ctx));
+  }
 }
 
-class _TiltViewState extends State<TiltView> {
+class TiltViewBody extends StatefulWidget {
+  final PlayContext ctx;
+  const TiltViewBody({super.key, required this.ctx});
+
+  @override
+  State<TiltViewBody> createState() => _TiltViewState();
+}
+
+class _TiltViewState extends State<TiltViewBody> {
   late TiltLevel level;
   late TiltGame game;
   int? _hint;
